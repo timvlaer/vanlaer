@@ -1,0 +1,12 @@
+a.list-group-item {
+  cursor: pointer;
+}
+
+a.list-group-item span.badge {
+  display: none;
+  cursor: pointer;
+}
+
+a.list-group-item:hover span.badge {
+  display: inherit;
+}

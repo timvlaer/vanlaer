@@ -1,0 +1,24 @@
+{
+  "name": "vanlaer-facturatie",
+  "description": "",
+  "main": "",
+  "authors": [
+    "Tim Van Laer <timvanlaer@gmail.com>"
+  ],
+  "license": "ISC",
+  "moduleType": [
+    "es6"
+  ],
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "firebase": "~2.3.2",
+    "underscore": "~1.8.3"
+  }
+}
