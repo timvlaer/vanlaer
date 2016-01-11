@@ -17,14 +17,17 @@ export class ClientListCmp {
   clientService:ClientService;
 
   clients:Client[];
-  filteredClientList:Client[] = this.clients;
+  filteredClientList:Client[];
 
   selectedClient:Client = null;
 
   constructor(clientService:ClientService) {
     this.clientService = clientService;
-    this.clients = this.clientService.getClients();
-    this.filteredClientList = this.clients;
+    //this.clientService.getClients().then(clients => this.filteredClientList = clients);
+
+    this.clientService.clients$.subscribe(clients => this.filteredClientList = clients);
+    this.clientService.clients$.subscribe(clients => this.clients = clients);
+    this.clientService.loadClients();
   }
 
   selectClient = function(client:Client) {

@@ -33,7 +33,8 @@ export class FacturatieCmp {
   };
 
   createNewClient = function () {
-    this.selectedClient = this.clientService.createNewClient();
+    var newClient = this.clientService.createNewClient();
+    this.selectedClient = newClient;
     this.clientEditMode = true;
   };
 

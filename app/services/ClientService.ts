@@ -1,11 +1,16 @@
 import {Injectable} from 'angular2/core';
 
+import {Observable} from 'rxjs/Observable';
+import 'rxjs/add/operator/share';
+
 import {Client} from '../domain/Client';
 import {FirebaseService} from './FirebaseService';
 
 @Injectable()
 export class ClientService {
-  STORAGE_KEY = "clients";
+
+  clients$: Observable<Array<Client>>;
+  private _clientsObserver: any;
 
   dataRef:Firebase;
 
@@ -14,61 +19,49 @@ export class ClientService {
 
   constructor() {
     this.dataRef = new FirebaseService().clientDataRef;
-    this._load();
+    this.clients$ = new Observable(observer => this._clientsObserver = observer).share();
   }
 
-  getClients = function() {
+  getClients = function(): Promise<Array<Client>> {
     return this.clients;
   };
 
+  loadClients = function() {
+    this.dataRef.once("value", function (snapshot) {
+      let clientPairs = snapshot.val();
+      this.clients = _.values(clientPairs);
+      this._notify();
+    }, function (errorObject) {
+      console.log("The read failed: " + errorObject.code);
+      //TODO tim: handle error
+    }, this);
+  };
+
   createNewClient = function():Client {
-    var client = new Client();
-    client.name = " ";
+    let client = new Client();
+    client.id = this.dataRef.push().key();
+
     this.clients.push(client);
+    this._notify();
+
     return client;
   };
 
   saveClient = function(client:Client) {
-    let existingClient = this.clients.find((c:Client) => c.id == client.id);
-    if(!existingClient) {
-      this.clients.push(client);
-    } else {
-      //update client?
-    }
-
-    let newClientRef = this.dataRef.push();
-    client.id = newClientRef.key();
-    newClientRef.set(client);
-    //TODO check client.id -> save or update
-
-    this._store();
+    this.dataRef.child(client.id).set(client);
   };
 
   removeClient = function(client:Client) {
-    this.clients = this.clients.splice(this.clients.indexOf(client), 1);
-    this._store();
+    if(client.id) {
+      this.dataRef.child(client.id).remove();
+    }
   };
 
   rollbackClient = function(client:Client) {
-     this._load();
+      //TODO tim implement
   };
 
-  _store = function () {
-    //localStorage.setItem(this.STORAGE_KEY, JSON.stringify(this.clients));
-  };
-
-  _load = function () {
-    //if (localStorage.getItem(this.STORAGE_KEY)) {
-    //  this.clients = JSON.parse(localStorage.getItem(this.STORAGE_KEY)) || [];
-    //}
-
-    this.dataRef.on("value", function(snapshot) {
-      let clientPairs = snapshot.val();
-      console.log(clientPairs);
-      this.clients = _.values(clientPairs);
-    }, function (errorObject) {
-      console.log("The read failed: " + errorObject.code);
-    }, this);
-
-  };
+  _notify = function() {
+    this._clientsObserver.next(this.clients);
+  }
 }
