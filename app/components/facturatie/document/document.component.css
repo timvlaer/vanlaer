@@ -1,0 +1,11 @@
+#page {
+    border: 1px solid #ddd;
+}
+
+div.client {
+    float: right;
+    background: #eeeeee;
+    padding: 20px 40px;
+    border-radius: 2px;
+    margin: 10px 20px 10px 0;
+}

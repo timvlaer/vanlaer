@@ -5,6 +5,7 @@ import {Client} from '../../../domain/Client';
 import {Document, DocumentType} from '../../../domain/Document';
 
 import {ClientService} from '../../../services/ClientService'
+import {DocumentService} from '../../../services/DocumentService'
 
 @Component({
   selector: 'document-list',
@@ -16,21 +17,26 @@ export class DocumentListCmp implements OnChanges {
 
   @Output() select:EventEmitter<Document> = new EventEmitter();
 
+  documentService:DocumentService;
+
   selectedDocument:Document = null;
 
   documents:Document[] = [];
 
-  //constructor(clientService:ClientService) {
-  //  this.clientService = clientService;
-  //  this.clients = this.clientService.getClients();
-  //  this.filteredClientList = this.clients;
-  //}
+  constructor(documentService:DocumentService) {
+    this.documentService = documentService;
+    this.documentService.documents$.subscribe(documents => {
+      this.documents = documents;
+      //erase selection if new collection doesn't contain selection
+      if(this.selectedDocument && this.documents.indexOf(this.selectedDocument) < 0) {
+        this.selectDocument(null);
+      }
+    });
+  }
 
   ngOnChanges(changes: {[propName: string]: SimpleChange}) {
-    console.log('ngOnChanges - myProp = ' + changes['client'].currentValue);
-    //TODO load documents
     if(this.client) {
-
+      this.documentService.loadDocuments(this.client);
     }
   };
 
@@ -41,10 +47,7 @@ export class DocumentListCmp implements OnChanges {
   };
 
   createNewDocument(type:DocumentType) {
-    var document = new Document();
-    document.number = new Date().getFullYear() + "/001"; //TODO get next number
-    document.date = new Date();
-    document.type = type;
+    var document = this.documentService.createNewDocument(this.client, type);
     this.documents.push(document);
   };
 

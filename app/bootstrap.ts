@@ -4,6 +4,7 @@ import {ROUTER_PROVIDERS} from 'angular2/router';
 import {HTTP_PROVIDERS} from 'angular2/http';
 
 import {ClientService} from './services/ClientService';
+import {DocumentService} from './services/DocumentService';
 
 import {AppCmp} from './components/app/app';
 
@@ -13,5 +14,6 @@ import 'rxjs/add/operator/do';
 bootstrap(AppCmp, [
   ROUTER_PROVIDERS,
   HTTP_PROVIDERS,
-  ClientService
+  ClientService,
+  DocumentService
 ]);

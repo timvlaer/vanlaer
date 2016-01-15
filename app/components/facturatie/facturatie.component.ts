@@ -2,25 +2,26 @@ import {Component} from 'angular2/core';
 import {CORE_DIRECTIVES} from 'angular2/common';
 
 import {Client} from '../../domain/Client';
+import {Document} from '../../domain/Document';
 
 import {ClientService} from '../../services/ClientService'
 
 import {ClientListCmp} from '../facturatie/client-list/client-list.component';
 import {ClientFormCmp} from '../facturatie/client-form/client-form.component';
 import {DocumentListCmp} from '../facturatie/document-list/document-list.component';
-import {DocumentCmp} from '../facturatie/document/document';
+import {DocumentCmp} from '../facturatie/document/document.component';
 
 @Component({
   selector: 'facturatie',
   templateUrl: './app/components/facturatie/facturatie.component.html',
-  directives: [ClientListCmp, ClientFormCmp, DocumentListCmp]
+  directives: [ClientListCmp, ClientFormCmp, DocumentListCmp, DocumentCmp, CORE_DIRECTIVES]
 })
-/**, DocumentCmp, DocumentListCmp, ClientFormCmp, CORE_DIRECTIVES*/
 export class FacturatieCmp {
 
   clientEditMode:boolean = false;
 
   selectedClient:Client;
+  selectedDocument:Document;
 
   clientService:ClientService;
 
@@ -30,6 +31,10 @@ export class FacturatieCmp {
 
   selectClient = function(client:Client) {
     this.selectedClient = client;
+  };
+
+  selectDocument = function(document:Document) {
+    this.selectedDocument = document;
   };
 
   createNewClient = function () {

@@ -13,10 +13,10 @@
     </div>
     <div class="col-lg-3" *ngIf="!clientEditMode">
       <h2>Documenten</h2>
-      <document-list [client]="selectedClient"></document-list>
+      <document-list [client]="selectedClient" (select)="selectDocument($event)"></document-list>
     </div>
     <div class="col-lg-6" *ngIf="!clientEditMode">
-      <!--<document [client]="selectedClient"></document>-->
+      <document [client]="selectedClient" [document]="selectedDocument"></document>
     </div>
   </div>
 </div>

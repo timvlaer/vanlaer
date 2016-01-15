@@ -15,7 +15,6 @@ export class ClientService {
   dataRef:Firebase;
 
   clients: Client[] = [];
-  listeners:Function[] = [];
 
   constructor() {
     this.dataRef = new FirebaseService().clientDataRef;
